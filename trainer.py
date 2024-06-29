@@ -84,7 +84,8 @@ def trainer_synapse(args, model, snapshot_path, multimask_output, low_res):
     best_avg_loss = 100
     loss_list = []
     for epoch_num in iterator:
-        for i_batch, sampled_batch in enumerate(trainloader):
+        for i_batch, sampled_batch in tqdm(enumerate(trainloader), total=len(trainloader),
+                                           desc=f"epoch {epoch_num}"):
             global_step += 1
             image_batch, label_batch = sampled_batch['image'], sampled_batch['label']  # [b, c, h, w], [b, h, w]
             low_res_label_batch = sampled_batch['low_res_label']
