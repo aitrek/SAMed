@@ -104,8 +104,8 @@ if __name__ == "__main__":
                                                                 pixel_std=[1, 1, 1])
 
     pkg = import_module(args.module)
-    # net = pkg.LoRA_Sam(sam, args.rank).cuda()
-    net = pkg.LoRA_Sam(sam, args.rank)
+    net = pkg.LoRA_Sam(sam, args.rank).cuda()
+    # net = pkg.LoRA_Sam(sam, args.rank)
 
     # net = LoRA_Sam(sam, args.rank).cuda()
     if args.lora_ckpt is not None:

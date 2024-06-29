@@ -134,7 +134,7 @@ def trainer_synapse(args, model, snapshot_path, multimask_output, low_res):
             #     labs = label_batch[1, ...].unsqueeze(0) * 50
             #     writer.add_image('train/GroundTruth', labs, iter_num)
 
-            save_interval = 20 # int(max_epoch/6)
+            save_interval = 100 # int(max_epoch/6)
             if global_step % save_interval == 0:
                 avg_loss = sum(loss_list) / len(loss_list)
                 wandb.log({"Loss/Train": avg_loss})
