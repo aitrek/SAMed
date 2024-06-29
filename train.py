@@ -62,7 +62,7 @@ args.batch_size = 64
 
 if __name__ == "__main__":
     wandb.init(project="SAMed",
-               name=f"SAMed_{datetime.now().strftime('%m-%d_%H-%M')}")
+               name=f"SAMed_{datetime.datetime.now().strftime('%m-%d_%H-%M')}")
     if not args.deterministic:
         cudnn.benchmark = True
         cudnn.deterministic = False
