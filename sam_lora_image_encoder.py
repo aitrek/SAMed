@@ -8,8 +8,8 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch.nn.parameter import Parameter
 from segment_anything.modeling import Sam
-from safetensors import safe_open
-from safetensors.torch import save_file
+# from safetensors import safe_open
+# from safetensors.torch import save_file
 
 from icecream import ic
 
@@ -149,7 +149,7 @@ class LoRA_Sam(nn.Module):
 
         assert filename.endswith(".pt") or filename.endswith('.pth')
 
-        state_dict = torch.load(filename)
+        state_dict = torch.load(filename, map_location="cpu")
 
         for i, w_A_linear in enumerate(self.w_As):
             saved_key = f"w_a_{i:03d}"

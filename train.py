@@ -5,6 +5,8 @@ import random
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
+import wandb
+import datetime
 
 from importlib import import_module
 
@@ -16,14 +18,14 @@ from icecream import ic
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
-                    default='/data/LarryXu/Synapse/preprocessed_data/train_npz', help='root dir for data')
-parser.add_argument('--output', type=str, default='/output/sam/results')
+                    default='/Users/zhaojq/Datasets/ALL_Multi', help='root dir for data')
+parser.add_argument('--output', type=str, default='./output/sam/results')
 parser.add_argument('--dataset', type=str,
                     default='Synapse', help='experiment_name')
 parser.add_argument('--list_dir', type=str,
                     default='./lists/lists_Synapse', help='list dir')
 parser.add_argument('--num_classes', type=int,
-                    default=8, help='output channel of network')
+                    default=2, help='output channel of network')
 parser.add_argument('--max_iterations', type=int,
                     default=30000, help='maximum epoch number to train')
 parser.add_argument('--max_epochs', type=int,
@@ -31,14 +33,14 @@ parser.add_argument('--max_epochs', type=int,
 parser.add_argument('--stop_epoch', type=int,
                     default=160, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int,
-                    default=12, help='batch_size per gpu')
-parser.add_argument('--n_gpu', type=int, default=2, help='total gpu')
+                    default=1, help='batch_size per gpu')
+parser.add_argument('--n_gpu', type=int, default=1, help='total gpu')
 parser.add_argument('--deterministic', type=int, default=1,
                     help='whether use deterministic training')
 parser.add_argument('--base_lr', type=float, default=0.005,
                     help='segmentation network learning rate')
 parser.add_argument('--img_size', type=int,
-                    default=512, help='input patch size of network input')
+                    default=256, help='input patch size of network input')
 parser.add_argument('--seed', type=int,
                     default=1234, help='random seed')
 parser.add_argument('--vit_name', type=str,
@@ -55,7 +57,12 @@ parser.add_argument('--module', type=str, default='sam_lora_image_encoder')
 parser.add_argument('--dice_param', type=float, default=0.8)
 args = parser.parse_args()
 
+args.root_path = "/root/autodl-tmp/datasets/SAM_nuclei_preprocessed/ALL_Multi"
+args.batch_size = 64
+
 if __name__ == "__main__":
+    wandb.init(project="SAMed",
+               name=f"SAMed_{datetime.now().strftime('%m-%d_%H-%M')}")
     if not args.deterministic:
         cudnn.benchmark = True
         cudnn.deterministic = False
@@ -97,7 +104,8 @@ if __name__ == "__main__":
                                                                 pixel_std=[1, 1, 1])
 
     pkg = import_module(args.module)
-    net = pkg.LoRA_Sam(sam, args.rank).cuda()
+    # net = pkg.LoRA_Sam(sam, args.rank).cuda()
+    net = pkg.LoRA_Sam(sam, args.rank)
 
     # net = LoRA_Sam(sam, args.rank).cuda()
     if args.lora_ckpt is not None:
