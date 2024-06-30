@@ -58,7 +58,7 @@ def trainer_synapse(args, model, snapshot_path, multimask_output, low_res):
     def worker_init_fn(worker_id):
         random.seed(args.seed + worker_id)
 
-    trainloader = DataLoader(db_train, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
+    trainloader = DataLoader(db_train, batch_size=batch_size, shuffle=True, num_workers=16, pin_memory=True)
     if args.n_gpu > 1:
         model = nn.DataParallel(model)
     model.train()
@@ -134,7 +134,7 @@ def trainer_synapse(args, model, snapshot_path, multimask_output, low_res):
             #     labs = label_batch[1, ...].unsqueeze(0) * 50
             #     writer.add_image('train/GroundTruth', labs, iter_num)
 
-            save_interval = 100 # int(max_epoch/6)
+            save_interval = 1000 # int(max_epoch/6)
             if global_step % save_interval == 0:
                 avg_loss = sum(loss_list) / len(loss_list)
                 wandb.log({"Loss/Train": avg_loss})

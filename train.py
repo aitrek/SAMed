@@ -25,7 +25,7 @@ parser.add_argument('--dataset', type=str,
 parser.add_argument('--list_dir', type=str,
                     default='./lists/lists_Synapse', help='list dir')
 parser.add_argument('--num_classes', type=int,
-                    default=2, help='output channel of network')
+                    default=1, help='output channel of network')
 parser.add_argument('--max_iterations', type=int,
                     default=30000, help='maximum epoch number to train')
 parser.add_argument('--max_epochs', type=int,
@@ -58,7 +58,7 @@ parser.add_argument('--dice_param', type=float, default=0.8)
 args = parser.parse_args()
 
 args.root_path = "/root/autodl-tmp/datasets/SAM_nuclei_preprocessed/ALL_Multi"
-args.batch_size = 64
+args.batch_size = 32
 
 if __name__ == "__main__":
     wandb.init(project="SAMed",
