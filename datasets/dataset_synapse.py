@@ -149,9 +149,11 @@ class MyDataset(Synapse_dataset):
                 ]
                 if not mask_vals:
                     continue
-                for mask_val in mask_vals:
-                    data_paths.append(data_path)
-                    label_paths.append((label_path, mask_val))
+                data_paths.append(data_path)
+                label_paths.append(label_path)
+                # for mask_val in mask_vals:
+                #     data_paths.append(data_path)
+                #     label_paths.append((label_path, mask_val))
 
         return data_paths, label_paths
 
@@ -159,22 +161,13 @@ class MyDataset(Synapse_dataset):
         return len(self.data_list)
 
     def __getitem__(self, idx):
-        if self.split == "train":
-            data_path = self.data_list[idx]
-            label_path, label_val = self.label_list[idx]
-            image = cv2.imread(data_path)
-            # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            label = np.load(label_path)
-            label[label != label_val] = 0
-            label[label == label_val] = 1
-            case_name = os.path.basename(data_path)
-        else:
-            vol_name = self.sample_list[idx].strip('\n')
-            filepath = self.data_dir + "/{}.npy.h5".format(vol_name)
-            data = h5py.File(filepath)
-            image, label = data['image'][:], data['label'][:]
-            case_name = self.sample_list[idx].strip('\n')
-
+        data_path = self.data_list[idx]
+        label_path = self.label_list[idx]
+        image = cv2.imread(data_path)
+        # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        label = np.load(label_path)
+        label[label != 0] = 1
+        case_name = os.path.basename(data_path)
         # Input dim should be consistent
         # Since the channel dimension of nature image is 3, that of medical image should also be 3
 
