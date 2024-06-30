@@ -47,6 +47,7 @@ def trainer_synapse(args, model, snapshot_path, multimask_output, low_res):
     db_train = MyDataset(
         data_root=args.root_path, split="train", test_smaple_rate=0.1,
         # transform=None,
+        excluded=["MoNuSeg2020"],
         transform=transforms.Compose([
             RandomGenerator(output_size=[args.img_size, args.img_size],
                             low_res=[low_res, low_res])])
